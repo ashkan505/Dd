@@ -5,7 +5,7 @@
 Complete Israeli RP Server Bot Ecosystem Runner
 
 این فایل تمام ربات‌های اکوسیستم را به صورت همزمان اجرا می‌کند.
-نسخه 2.0 - شامل تمام ربات‌های جدید
+نسخه 3.0 - شامل تمام ربات‌های نظامی و اطلاعاتی جداگانه
 
 تاریخ: ۲۵ آگوست ۲۰۲۵
 """
@@ -29,9 +29,14 @@ from david_sling_bot import DavidSlingBot
 from arrow_defense_bots import Arrow3Bot, Arrow4Bot
 from thaad_bot import THAADBot
 from army_command_bot import ArmyCommandBot
-from economic_bots import CentralBankBot, MilitaryIndustriesBot, TelAvivStockExchangeBot
-from civil_systems import JobsAndEducationBot, RealEstateBot, PoliticalPartiesBot, RadioIsraelBot
-from crisis_management import CrisisManagementBot, PersonalProgressBot, UndergroundEconomyBot
+from air_force_bot import IsraeliAirForceBot
+from ground_forces_bot import IsraeliGroundForcesBot
+from navy_bot import IsraeliNavyBot
+from mossad_bot import MossadBot
+from unit_8200_bot import Unit8200Bot
+from economic_bots import NationalEconomyBot, MilitaryIndustriesBot, TelAvivStockExchangeBot
+from civil_systems import CivilJobsEducationBot, RealEstateBot, PoliticalPartiesBot, RadioIsraelBot
+from crisis_management import CrisisManagementBot, PersonalProgressionBot, UnderworldBot
 
 # تنظیم لاگینگ
 logging.basicConfig(
@@ -235,6 +240,7 @@ class BotEcosystemManager:
                 'central': {'total': 0, 'running': 0},
                 'defense': {'total': 0, 'running': 0},
                 'military': {'total': 0, 'running': 0},
+                'intelligence': {'total': 0, 'running': 0},
                 'economic': {'total': 0, 'running': 0},
                 'civil': {'total': 0, 'running': 0},
                 'crisis': {'total': 0, 'running': 0}
@@ -251,6 +257,11 @@ class BotEcosystemManager:
             'خِتْس ۴': 'defense',
             'تاد': 'defense',
             'فرماندهی کل ارتش': 'military',
+            'نیروی هوایی': 'military',
+            'نیروی زمینی': 'military',
+            'نیروی دریایی': 'military',
+            'موساد': 'intelligence',
+            'واحد ۸۲۰۰': 'intelligence',
             'بانک مرکزی': 'economic',
             'صنایع نظامی': 'economic',
             'بورس تل‌آویو': 'economic',
@@ -260,7 +271,7 @@ class BotEcosystemManager:
             'رادیو اسرائیل': 'civil',
             'مدیریت بحران': 'crisis',
             'پیشرفت فردی': 'crisis',
-            'اقتصاد سیاه': 'crisis'
+            'دنیای زیرین': 'crisis'
         }
         
         for i, bot_info in enumerate(self.bots):
@@ -306,8 +317,8 @@ def main():
     """تابع اصلی اکوسیستم"""
     
     print("🇮🇱" + "=" * 76 + "🇮🇱")
-    print("   اکوسیستم کامل ربات‌های رول‌پلی اسرائیل - نسخه 2.0")
-    print("   Israeli RP Server Complete Bot Ecosystem v2.0")
+    print("   اکوسیستم کامل ربات‌های رول‌پلی اسرائیل - نسخه 3.0")
+    print("   Israeli RP Server Complete Bot Ecosystem v3.0")
     print("🇮🇱" + "=" * 76 + "🇮🇱")
     
     # بررسی پشتیبانی multiprocessing
@@ -334,22 +345,29 @@ def main():
         
         # سیستم نظامی
         (ArmyCommandBot, "فرماندهی کل ارتش", "DISCORD_BOT_TOKEN_ARMY_COMMAND"),
+        (IsraeliAirForceBot, "نیروی هوایی", "DISCORD_BOT_TOKEN_AIR_FORCE"),
+        (IsraeliGroundForcesBot, "نیروی زمینی", "DISCORD_BOT_TOKEN_GROUND_FORCES"),
+        (IsraeliNavyBot, "نیروی دریایی", "DISCORD_BOT_TOKEN_NAVY"),
+        
+        # سیستم اطلاعاتی
+        (MossadBot, "موساد", "DISCORD_BOT_TOKEN_MOSSAD"),
+        (Unit8200Bot, "واحد ۸۲۰۰", "DISCORD_BOT_TOKEN_UNIT_8200"),
         
         # سیستم اقتصادی
-        (CentralBankBot, "بانک مرکزی", "DISCORD_BOT_TOKEN_CENTRAL_BANK"),
+        (NationalEconomyBot, "بانک مرکزی", "DISCORD_BOT_TOKEN_NATIONAL_ECONOMY"),
         (MilitaryIndustriesBot, "صنایع نظامی", "DISCORD_BOT_TOKEN_MILITARY_INDUSTRIES"),
-        (TelAvivStockExchangeBot, "بورس تل‌آویو", "DISCORD_BOT_TOKEN_STOCK_EXCHANGE"),
+        (TelAvivStockExchangeBot, "بورس تل‌آویو", "DISCORD_BOT_TOKEN_TEL_AVIV_STOCK_EXCHANGE"),
         
         # سیستم‌های مدنی
-        (JobsAndEducationBot, "مشاغل و آموزش", "DISCORD_BOT_TOKEN_JOBS_EDUCATION"),
+        (CivilJobsEducationBot, "مشاغل و آموزش", "DISCORD_BOT_TOKEN_CIVIL_SYSTEMS"),
         (RealEstateBot, "املاک و مستغلات", "DISCORD_BOT_TOKEN_REAL_ESTATE"),
         (PoliticalPartiesBot, "احزاب سیاسی", "DISCORD_BOT_TOKEN_POLITICAL_PARTIES"),
         (RadioIsraelBot, "رادیو اسرائیل", "DISCORD_BOT_TOKEN_RADIO_ISRAEL"),
         
         # مدیریت بحران و سیستم‌های پیشرفته
         (CrisisManagementBot, "مدیریت بحران", "DISCORD_BOT_TOKEN_CRISIS_MANAGEMENT"),
-        (PersonalProgressBot, "پیشرفت فردی", "DISCORD_BOT_TOKEN_PERSONAL_PROGRESS"),
-        (UndergroundEconomyBot, "اقتصاد سیاه", "DISCORD_BOT_TOKEN_UNDERGROUND"),
+        (PersonalProgressionBot, "پیشرفت فردی", "DISCORD_BOT_TOKEN_PERSONAL_PROGRESSION"),
+        (UnderworldBot, "دنیای زیرین", "DISCORD_BOT_TOKEN_UNDERWORLD"),
     ]
     
     # اضافه کردن ربات‌ها به اکوسیستم
@@ -369,6 +387,7 @@ def main():
         logger.info(f"   • مرکزی: {status['categories']['central']['running']}/{status['categories']['central']['total']}")
         logger.info(f"   • دفاعی: {status['categories']['defense']['running']}/{status['categories']['defense']['total']}")
         logger.info(f"   • نظامی: {status['categories']['military']['running']}/{status['categories']['military']['total']}")
+        logger.info(f"   • اطلاعاتی: {status['categories']['intelligence']['running']}/{status['categories']['intelligence']['total']}")
         logger.info(f"   • اقتصادی: {status['categories']['economic']['running']}/{status['categories']['economic']['total']}")
         logger.info(f"   • مدنی: {status['categories']['civil']['running']}/{status['categories']['civil']['total']}")
         logger.info(f"   • بحران: {status['categories']['crisis']['running']}/{status['categories']['crisis']['total']}")
@@ -407,14 +426,54 @@ if __name__ == "__main__":
        - لاگ‌ها در: israel_rp_ecosystem.log
        - restart خودکار ربات‌های متوقف شده
     
-    🏗️ معماری اکوسیستم:
-    • 1 ربات مرکزی (ستاره داوود)
-    • 5 ربات دفاعی (گنبد آهنین، فلاخن، خِتس، تاد)
-    • 1 ربات نظامی (فرماندهی ارتش)
-    • 3 ربات اقتصادی (بانک، صنایع، بورس)
-    • 4 ربات مدنی (مشاغل، املاک، احزاب، رادیو)
-    • 3 ربات مدیریت (بحران، پیشرفت، اقتصاد سیاه)
+    🏗️ معماری اکوسیستم کامل:
     
-    📊 مجموع: 17 ربات تخصصی
+    🎯 ربات مرکزی:
+    • ستاره داوود (مغز متفکر کل سیستم)
+    
+    🛡️ سیستم دفاعی (5 ربات):
+    • گنبد آهنین (مقابله با اسپم)
+    • فلاخن داوود (مقابله با منشن و raid)
+    • خِتس 3 و 4 (مقابله با nuking)
+    • تاد (دفاع پیشگیرانه)
+    
+    ⚔️ نیروهای نظامی (4 ربات):
+    • فرماندهی کل ارتش (هماهنگی)
+    • نیروی هوایی (عملیات هوایی)
+    • نیروی زمینی (عملیات زمینی)
+    • نیروی دریایی (عملیات دریایی)
+    
+    🕵️ سیستم اطلاعاتی (2 ربات):
+    • موساد (اطلاعات و عملیات ویژه)
+    • واحد 8200 (جنگ سایبری)
+    
+    💰 سیستم اقتصادی (3 ربات):
+    • بانک مرکزی (اقتصاد ملی)
+    • صنایع نظامی (تولید تسلیحات)
+    • بورس تل‌آویو (بازار سرمایه)
+    
+    🏛️ سیستم‌های مدنی (4 ربات):
+    • مشاغل و آموزش (زندگی مدنی)
+    • املاک و مستغلات (خانه‌ها)
+    • احزاب سیاسی (سیاست)
+    • رادیو اسرائیل (موزیک و اعلانات)
+    
+    🚨 مدیریت بحران (3 ربات):
+    • مدیریت بحران (بحران‌های ملی)
+    • پیشرفت فردی (مهارت‌های شخصی)
+    • دنیای زیرین (اقتصاد سیاه)
+    
+    📊 مجموع: 22 ربات تخصصی
+    
+    🎮 ویژگی‌های کلیدی:
+    • شبیه‌سازی کامل کشور اسرائیل
+    • عملیات نظامی واقعی
+    • اقتصاد پیچیده
+    • سیستم سیاسی کامل
+    • مدیریت بحران
+    • پیشرفت شخصی
+    • اطلاعات و جاسوسی
+    • جنگ سایبری
+    • و خیلی بیشتر...
     """
     main()
