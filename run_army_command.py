@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""
+اسکریپت راه‌اندازی ربات فرماندهی کل ارتش اسرائیل
+Script to run Army Command bot
+"""
+
+import asyncio
+import logging
+import os
+import sys
+
+# تنظیم لاگینگ
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - Army Command - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs/army_command_standalone.log'),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# ایجاد دایرکتوری لاگ‌ها
+os.makedirs('logs', exist_ok=True)
+
+async def main():
+    """تابع اصلی"""
+    try:
+        # بررسی وجود فایل config
+        if not os.path.exists('config.py'):
+            logger.error("❌ فایل config.py یافت نشد!")
+            logger.error("لطفاً ابتدا فایل .env را تنظیم کنید")
+            return
+        
+        # بررسی وجود فایل .env
+        if not os.path.exists('.env'):
+            logger.warning("⚠️ فایل .env یافت نشد!")
+            logger.warning("لطفاً فایل .env.example را کپی کرده و تنظیم کنید")
+        
+        # import کردن ربات
+        from bots.army_command import ArmyCommandBot
+        from config import BOT_TOKENS
+        
+        # بررسی توکن
+        token = BOT_TOKENS.get("army_command")
+        if not token:
+            logger.error("❌ توکن ربات فرماندهی ارتش یافت نشد!")
+            return
+        
+        logger.info("🚀 راه‌اندازی ربات فرماندهی کل ارتش اسرائیل...")
+        
+        # ایجاد و راه‌اندازی ربات
+        bot = ArmyCommandBot()
+        await bot.start(token)
+        
+    except KeyboardInterrupt:
+        logger.info("📡 راه‌اندازی توسط کاربر متوقف شد")
+    except Exception as e:
+        logger.error(f"❌ خطای غیرمنتظره: {e}")
+    finally:
+        logger.info("👋 خروج از برنامه")
+
+if __name__ == "__main__":
+    print("🚀 راه‌اندازی ربات فرماندهی کل ارتش اسرائیل...")
+    print("برای توقف، Ctrl+C را فشار دهید")
+    print("-" * 50)
+    
+    # اجرای برنامه
+    asyncio.run(main())
